@@ -18,23 +18,25 @@ var upload = multer({ storage: storage });
 app.use(express.static(__dirname+"/uploads"));
 app.get('/uploads/:id',(req,res)=>{
     try {
-        console.log(__dirname+req.params.id);
         res.sendFile(__dirname+"/uploads/"+req.params.id);
     } catch (error) {
-        console.log(error);
+      return res.send({
+        success: false
+      });
     }
 })
 app.post('/api/upload', upload.single('file'), (req, res) => {
     try {
+      console.log(req.headers.host);
         if (!req.file) {
             return res.send({
               success: false
             });
-        
+            
           } else {
             return res.send({
               success: true,
-              link_image:`http://${os.hostname}:8000/uploads/${req.file.filename}`,
+              link_image:`http://${req.headers.host}/uploads/${req.file.filename}`,
             })
           }
     } catch (error) {
