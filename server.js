@@ -27,7 +27,6 @@ app.get('/uploads/:id',(req,res)=>{
 })
 app.post('/api/upload', upload.single('file'), (req, res) => {
     try {
-      console.log(req.headers.host);
         if (!req.file) {
             return res.send({
               success: false
