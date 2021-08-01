@@ -45,6 +45,29 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     }
     
   });
+  app.post("/api/upload/multiple",upload.array('files',5) ,(req, res) => {
+    try {
+      if (!req.files) {
+          return res.send({
+            success: false
+          });
+          
+        } else {
+          let image_list = [];
+          for (const item of req.files) {
+            image_list.push(`http://${req.headers.host}/uploads/${item.filename}`);
+          }
+          return res.send({
+            success: true,
+            image_list
+          })
+        }
+  } catch (error) {
+      return res.send({
+          success: false
+        });
+  }
+  });
 app.listen(8000,()=>{
     console.log("Server is running at port 8000");
 })
