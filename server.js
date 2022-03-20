@@ -5,9 +5,13 @@ let multer = require('multer');
 const fs = require('fs');
 let bodyParser = require('body-parser');
 let cors = require('cors');
-const fsExtra = require('fs-extra')
+const fsExtra = require('fs-extra');
+const mime = require('mime');
+let generateSafeId = require('generate-safe-id');
+
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads')
@@ -31,6 +35,35 @@ app.get('/uploads/:id', (req, res) => {
     });
   }
 })
+const uploadImage = async (req, res, next) => {
+  // to declare some path to store your converted image
+  try {
+  var matches = req.body.file.toString().match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
+  response = {};
+  if (matches.length !== 3) {
+  return new Error('Invalid input string');
+  }
+   
+  response.type = matches[1];
+  response.data = Buffer.from(matches[2], 'base64');
+  let decodedImg = response;
+  let imageBuffer = decodedImg.data;
+  let type = decodedImg.type;
+  let extension = mime.extension(type);
+
+  let fileName =  `${generateSafeId()}.${extension}`;
+
+  fs.writeFileSync("./uploads/" + fileName, imageBuffer, 'utf8');
+  return res.send({
+    success: true,
+    link_image: `http://${req.headers.host}/uploads/${fileName}`,
+  })
+  } catch (e) {
+  next(e);
+  }
+  }
+   
+app.post('/upload/image', uploadImage)
 app.post('/api/upload', upload.single('file'), (req, res) => {
   try {
     if (!req.file) {
