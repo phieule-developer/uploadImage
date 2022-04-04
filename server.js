@@ -1,6 +1,6 @@
 let express = require('express');
 let app = express();
-const cron = require('node-cron');
+// const cron = require('node-cron');
 let multer = require('multer');
 const fs = require('fs');
 let bodyParser = require('body-parser');
@@ -21,10 +21,10 @@ var storage = multer.diskStorage({
   }
 })
 var upload = multer({ storage: storage });
-cron.schedule('0 3 * * *', async () => {
-  fsExtra.emptyDirSync("./uploads")
+// cron.schedule('0 3 * * *', async () => {
+//   fsExtra.emptyDirSync("./uploads")
 
-}, { timezone: "Asia/Ho_Chi_Minh" });
+// }, { timezone: "Asia/Ho_Chi_Minh" });
 app.use(express.static(__dirname + "/uploads"));
 app.get('/uploads/:id', (req, res) => {
   try {
