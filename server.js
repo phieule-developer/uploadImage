@@ -38,31 +38,31 @@ app.get('/uploads/:id', (req, res) => {
 const uploadImage = async (req, res, next) => {
   // to declare some path to store your converted image
   try {
-  var matches = req.body.file.toString().match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
-  response = {};
-  if (matches.length !== 3) {
-  return new Error('Invalid input string');
-  }
-   
-  response.type = matches[1];
-  response.data = Buffer.from(matches[2], 'base64');
-  let decodedImg = response;
-  let imageBuffer = decodedImg.data;
-  let type = decodedImg.type;
-  let extension = mime.extension(type);
+    var matches = req.body.file.toString().match(/^data:([A-Za-z-+/]+);base64,(.+)$/);
+    response = {};
+    if (matches.length !== 3) {
+      return new Error('Invalid input string');
+    }
 
-  let fileName =  `${generateSafeId()}.${extension}`;
+    response.type = matches[1];
+    response.data = Buffer.from(matches[2], 'base64');
+    let decodedImg = response;
+    let imageBuffer = decodedImg.data;
+    let type = decodedImg.type;
+    let extension = mime.extension(type);
 
-  fs.writeFileSync("./uploads/" + fileName, imageBuffer, 'utf8');
-  return res.send({
-    success: true,
-    link_image: `http://${req.headers.host}/uploads/${fileName}`,
-  })
+    let fileName = `${generateSafeId()}.${extension}`;
+
+    fs.writeFileSync("./uploads/" + fileName, imageBuffer, 'utf8');
+    return res.send({
+      success: true,
+      link_image: `http://${req.headers.host}/uploads/${fileName}`,
+    })
   } catch (e) {
-  next(e);
+    next(e);
   }
-  }
-   
+}
+
 app.post('/upload/image', uploadImage)
 app.post('/api/upload', upload.single('file'), (req, res) => {
   try {
@@ -107,6 +107,6 @@ app.post("/api/upload/multiple", upload.array('files', 5), (req, res) => {
     });
   }
 });
-app.listen(5000, () => {
-  console.log("Server is running at port 8000");
+app.listen(10802, () => {
+  console.log("Server is running at port 10802");
 })
