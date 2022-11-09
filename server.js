@@ -5,13 +5,12 @@ let multer = require('multer');
 const fs = require('fs');
 let bodyParser = require('body-parser');
 let cors = require('cors');
-const fsExtra = require('fs-extra');
 const mime = require('mime');
 let generateSafeId = require('generate-safe-id');
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads')
@@ -107,6 +106,6 @@ app.post("/api/upload/multiple", upload.array('files', 5), (req, res) => {
     });
   }
 });
-app.listen(10802, () => {
-  console.log("Server is running at port 10802");
+app.listen(5000, () => {
+  console.log("Server is running at port 5000");
 })
