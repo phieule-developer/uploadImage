@@ -59,6 +59,6 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
 
 });
 
-app.listen(5000, () => {
+app.listen(4444, () => {
   console.log("Server is running at port 5000");
 })
