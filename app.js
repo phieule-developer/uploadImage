@@ -3,6 +3,7 @@ let app = express();
 let multer = require('multer');
 let bodyParser = require('body-parser');
 let cors = require('cors');
+const fs = require('fs');
 
 app.use(cors());
 app.use(bodyParser.json({limit: '1024mb'}));
@@ -38,19 +39,21 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
   try {
     if (!req.file) {
       return res.send({
-        success: false
+        success: false,
+        url:null,
       });
 
     } else {
       return res.send({
         success: true,
-        link_image: `http://${req.headers.host}/uploads/${req.file.filename}`,
+        url: `http://${req.headers.host}/uploads/${req.file.filename}`,
       })
     }
   } catch (error) {
     console.log(error);
     return res.send({
-      success: false
+      success: false,
+      url:null,
     });
   }
 
