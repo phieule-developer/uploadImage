@@ -15,7 +15,7 @@ var storage = multer.diskStorage({
     cb(null, './uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    cb(null, `${Date.now()}_${file.originalname.replaceAll(" ","")}`)
   }
 });
 var maxSize = 1000 * 1024 * 1024 ;
@@ -46,7 +46,7 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     } else {
       return res.send({
         success: true,
-        url: `http://${req.headers.host}/uploads/${req.file.filename}`,
+        url: `https://${req.headers.host.split(":")[0]}/file/uploads/${req.file.filename}`,
       })
     }
   } catch (error) {
@@ -60,5 +60,5 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
 });
 
 app.listen(4444, () => {
-  console.log("Server is running at port 5000");
+  console.log("Server is running at port 4444");
 })
