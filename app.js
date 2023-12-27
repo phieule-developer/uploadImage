@@ -11,7 +11,16 @@ app.use(bodyParser.urlencoded({limit: '1024mb', extended: true}));
 
 
 var storage = multer.diskStorage({
+
+  
   destination: function (req, file, cb) {
+
+    const uploadFolder = 'uploads/';
+
+    if (!fs.existsSync(uploadFolder)) {
+      fs.mkdirSync(uploadFolder);
+    }
+
     cb(null, './uploads')
   },
   filename: function (req, file, cb) {
@@ -44,19 +53,20 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
       });
 
     } else {
+
+      let host = req.protocol = 'http' ? req.headers.host: `${req.headers.host.split(":")[0]}/file`
+      let url = `${req.protocol}://${host}/uploads/${req.file.filename}`;
       return res.send({
         success: true,
-        url: `https://${req.headers.host.split(":")[0]}/file/uploads/${req.file.filename}`,
+        url,
       })
     }
   } catch (error) {
-    console.log(error);
     return res.send({
       success: false,
       url:null,
     });
   }
-
 });
 
 app.listen(4444, () => {
