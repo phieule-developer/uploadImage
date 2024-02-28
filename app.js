@@ -36,9 +36,9 @@ app.use(express.static(__dirname + "/uploads"));
 
 app.get('/uploads/:id', (req, res) => {
   try {
-    res.sendFile(__dirname + "/uploads/" + req.params.id);
+    res.json(__dirname + req.params.id);
   } catch (error) {
-    return res.send({
+    return res.json({
       success: false
     });
   }
@@ -47,22 +47,21 @@ app.get('/uploads/:id', (req, res) => {
 app.post('/api/upload', upload.single('file'), (req, res) => {
   try {
     if (!req.file) {
-      return res.send({
+      return res.json({
         success: false,
         url:null,
       });
 
     } else {
-      let host = req.headers['origin']?.split(":")[0] == 'http' ? `http://${req.headers.host}:4444` : `https://${req.headers['host']}/file`;
 
-      let url = `${host}/uploads/${req.file.filename}`;
-      return res.send({
+      let url = `${req.file.filename}`;
+      return res.json({
         success: true,
         url,
       })
     }
   } catch (error) {
-    return res.send({
+    return res.json({
       success: false,
       url:null,
     });
