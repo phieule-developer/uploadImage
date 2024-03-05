@@ -53,9 +53,9 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
       });
 
     } else {
-      let host = req.headers['origin']?.split(":")[0] == 'http' ? `http://${req.headers.host}:4444` : `https://${req.headers['host']}/file`;
+      // let host = req.headers['origin']?.split(":")[0] == 'http' ? `http://${req.headers.host}:4444` : `https://${req.headers['host']}/file`;
 
-      let url = `${host}/uploads/${req.file.filename}`;
+      let url = `/uploads/${req.file.filename}`;
       return res.send({
         success: true,
         url,
